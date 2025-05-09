@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register Form</title>
-  <link rel="stylesheet" href="styless.css">
+  <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -23,7 +23,7 @@
         <img src="https://img.icons8.com/fluency/48/instagram-new.png" alt="Instagram">
         <img src="https://img.icons8.com/ios-filled/48/000000/more.png" alt="More">
       </div>
-      <p class="login-link">Already have an account? <a href="#">Log in</a></p>
+      <p class="login-link">Already have an account? <a href="login.php">Log in</a></p>
     </form>
   </div>
 </body>
