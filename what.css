@@ -1,0 +1,121 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f3f3f3;
+}
+
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: #c0c0c0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item {
+  padding: 15px;
+  margin-bottom: 10px;
+  background: #aaa;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  background: #fff;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar-icons input {
+  padding: 5px;
+  width: 200px;
+}
+
+.topbar-icons button {
+  margin-left: 5px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.edit-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.product-list {
+  margin-top: 20px;
+}
+
+.product-card {
+  display: flex;
+  background: #e0e0e0;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.image-placeholder {
+  width: 150px;
+  height: 150px;
+  background: #d3d3d3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.product-info h2 {
+  margin: 0 0 10px;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.selectors {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.selectors label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.purchase-button {
+  padding: 8px 15px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+details {
+  margin-top: 10px;
+}
