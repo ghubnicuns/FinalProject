@@ -1,46 +1,30 @@
 <?php
-ob_start();
-session_start();
-$msg = '';
+   ob_start();
+   session_start();
+   $msg = '';
 
-// Database connection setup
-$host = 'localhost';
-$dbname = 'ims'; // Change this
-$dbuser = 'root';   // Change this
-$dbpass = '';   // Change this
+   $users = [
+      'root' => 'admin',
+      'cuns' => 'cunan',
+      'guest' => 'abc123'
+   ];
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $dbuser, $dbpass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
-}
-
-// Handle login
-if (isset($_POST['login']) && !empty($_POST['username']) && !empty($_POST['password'])) {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
-
-    $stmt = $pdo->prepare("SELECT pword FROM user WHERE uname = :username LIMIT 1");
-    $stmt->execute(['username' => $username]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($user) {
-        // For plain-text passwords only — you should use password_hash in production
-        if ($user['pword'] === $password) {
+   if (isset($_POST['login']) && !empty($_POST['username']) && !empty($_POST['password'])) {
+      $user = $_POST['username'];
+      if (array_key_exists($user, $users)) {
+         if ($users[$user] == $_POST['password']) {
             $_SESSION['valid'] = true;
             $_SESSION['timeout'] = time();
-            $_SESSION['username'] = $username;
+            $_SESSION['username'] = $user;
             $msg = "Login success!";
-        } else {
+         } else {
             $msg = "You have entered wrong Password";
-        }
-    } else {
-        $msg = "You have entered wrong user name";
-    }
-}
+         }
+      } else {
+         $msg = "You have entered wrong user name";
+      }
+   }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,8 +53,8 @@ if (isset($_POST['login']) && !empty($_POST['username']) && !empty($_POST['passw
          <p class="login-link">Don't have an account? <a href="register.php">Register</a></p>
       </form>
       <div class="message-box">
-         <h4><?php echo htmlspecialchars($msg); ?></h4>
-         <p><a href="logout.php" title="Logout">Click here to clean Session.</a></p>
+        <h4><?php echo $msg; ?></h4>
+        <p><a href="logout.php" title="Logout">Click here to clean Session.</a></p>
       </div>
    </div>
 </body>

@@ -34,7 +34,8 @@
   
   .register-box input[type="text"],
   .register-box input[type="email"],
-  .register-box input[type="password"] {
+  .register-box input[type="password"],
+  .register-box input[type="username"] {
     width: 100%;
     padding: 12px 15px;
     margin: 10px 0;
@@ -104,3 +105,23 @@
   .login-link a:hover {
     text-decoration: underline;
   }
+
+  .message-box {
+    text-align: center;
+    margin-top: 20px;
+ }
+ 
+ .message-box h4 {
+    color: red;
+    margin-bottom: 10px;
+ }
+ 
+ .message-box a {
+    font-size: 1.2rem;
+    color: #007BFF;
+    text-decoration: none;
+ }
+ 
+ .message-box a:hover {
+    text-decoration: underline;
+ }

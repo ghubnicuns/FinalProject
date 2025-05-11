@@ -9,12 +9,12 @@
 </head>
 <body>
   <div class="container">
-    <form class="register-box">
+    <form class="register-box" action="action_page.php" method='POST'>
       <h1>REGISTER</h1>
-      <input type="text" placeholder="Name" required>
-      <input type="email" placeholder="Email Address" required>
-      <input type="password" placeholder="Password" required>
-      <button type="submit">Sign Up</button>
+      <input type="text" placeholder="Name" name="fname" required>
+      <input type="text" placeholder="Username" name="uname" required>
+      <input type="password" placeholder="Password" name="pword" required>
+      <button type="submit" name="submit">Sign Up</button>
 
       <p class="continue-text">Continue with:</p>
       <div class="social-icons">
