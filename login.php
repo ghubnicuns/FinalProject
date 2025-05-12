@@ -16,11 +16,10 @@ if (isset($_SESSION['msg'])) {
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Login Page</title>
    <link rel="stylesheet" href="styles.css">
-   <link href="login_action.php" rel="stylesheet">
 </head>
 <body>
    <div class="container">
-      <form class="register-box" action="login_action.php" method="post"> <!-- Point to the action page -->
+      <form class="register-box" action="dash.php" method="post"> <!-- Point to the action page -->
          <h1>Log in</h1>
          <input type="text" placeholder="Username" name="username" id="name" required>
          <input type="password" placeholder="Password" name="password" id="password" required>
