@@ -10,7 +10,7 @@
   <div class="sidebar">
     <h3>PROJECT STOREMAI</h3>
     <button>DASHBOARD</button>
-    <button class="active">INVENTORY</button>
+    <button >INVENTORY</button>
     <button>USER</button>
     <button>REPORTS</button>
     <button>PRODUCTS</button>

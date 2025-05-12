@@ -11,11 +11,11 @@
         <aside class="sidebar">
           <h2>PROJECT STOREMAI</h2>
           <nav>
-            <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="#"><i class="fas fa-home"></i> Dashboard</a>
             <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
             <a href="user.php"><i class="fas fa-users"></i> User</a>
             <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-            <a href="products.php"><i class="fas fa-tags"></i> Products</a>
+            <a href="add.php"><i class="fas fa-tags"></i> Products</a>
           </nav>
         </aside>
 
