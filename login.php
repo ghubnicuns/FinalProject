@@ -1,43 +1,11 @@
 <?php
-ob_start();
 session_start();
-$msg = '';
+$msg = ''; // Initialize message variable
 
-// Database connection setup
-$host = 'localhost';
-$dbname = 'ims'; // Change this
-$dbuser = 'root';   // Change this
-$dbpass = '';   // Change this
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $dbuser, $dbpass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
-}
-
-// Handle login
-if (isset($_POST['login']) && !empty($_POST['username']) && !empty($_POST['password'])) {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
-
-    $stmt = $pdo->prepare("SELECT pword FROM user WHERE uname = :username LIMIT 1");
-    $stmt->execute(['username' => $username]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($user) {
-        // For plain-text passwords only — you should use password_hash in production
-        if ($user['pword'] === $password) {
-            $_SESSION['valid'] = true;
-            $_SESSION['timeout'] = time();
-            $_SESSION['username'] = $username;
-            $msg = "Login success!";
-        } else {
-            $msg = "You have entered wrong Password";
-        }
-    } else {
-        $msg = "You have entered wrong user name";
-    }
+// Display any message if set
+if (isset($_SESSION['msg'])) {
+    $msg = $_SESSION['msg'];
+    unset($_SESSION['msg']); // Clear the message after displaying
 }
 ?>
 
@@ -46,13 +14,13 @@ if (isset($_POST['login']) && !empty($_POST['username']) && !empty($_POST['passw
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Login page</title>
+   <title>Login Page</title>
    <link rel="stylesheet" href="styles.css">
-   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+   <link href="login_action.php" rel="stylesheet">
 </head>
 <body>
    <div class="container">
-      <form class="register-box" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+      <form class="register-box" action="login_action.php" method="post"> <!-- Point to the action page -->
          <h1>Log in</h1>
          <input type="text" placeholder="Username" name="username" id="name" required>
          <input type="password" placeholder="Password" name="password" id="password" required>
