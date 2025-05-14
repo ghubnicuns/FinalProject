@@ -10,7 +10,6 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -286,7 +285,6 @@ body {
   font-weight: bold;
 }
 
-/* Right Column */
 .right-column {
   display: flex;
   flex-direction: column;
