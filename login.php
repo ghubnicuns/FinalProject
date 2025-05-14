@@ -1,11 +1,10 @@
 <?php
 session_start();
-$msg = ''; // Initialize message variable
+$msg = '';
 
-// Display any message if set
 if (isset($_SESSION['msg'])) {
     $msg = $_SESSION['msg'];
-    unset($_SESSION['msg']); // Clear the message after displaying
+    unset($_SESSION['msg']);
 }
 ?>
 
@@ -16,13 +15,14 @@ if (isset($_SESSION['msg'])) {
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Login Page</title>
    <link rel="stylesheet" href="styles.css">
+   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 </head>
 <body>
    <div class="container">
-      <form class="register-box" action="dash.php" method="post"> <!-- Point to the action page -->
-         <h1>Log in</h1>
-         <input type="text" placeholder="Username" name="username" id="name" required>
-         <input type="password" placeholder="Password" name="password" id="password" required>
+      <form class="white-box" action="login_process.php" method="post">
+         <h1>LOGIN</h1>
+         <input type="text" placeholder="Username" name="uname" id="uname" required aria-label="Username">
+         <input type="password" placeholder="Password" name="pword" id="pword" required aria-label="Password">
          <button type="submit" name="login">Login</button>
 
          <p class="continue-text">Continue with:</p>
@@ -32,12 +32,10 @@ if (isset($_SESSION['msg'])) {
             <img src="https://img.icons8.com/fluency/48/instagram-new.png" alt="Instagram">
             <img src="https://img.icons8.com/ios-filled/48/000000/more.png" alt="More">
          </div>
-
          <p class="login-link">Don't have an account? <a href="register.php">Register</a></p>
       </form>
       <div class="message-box">
          <h4><?php echo htmlspecialchars($msg); ?></h4>
-         <p><a href="logout.php" title="Logout">Click here to clean Session.</a></p>
       </div>
    </div>
 </body>

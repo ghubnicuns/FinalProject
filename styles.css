@@ -1,127 +1,315 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: 'Georgia', serif;
-    background-image: url('bg.PNG');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .register-box {
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 2rem;
-    width: 400px;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    text-align: center;
-  }
-  
-  .register-box h1 {
-    font-family: 'Anton', sans-serif;
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-    letter-spacing: 1px;
-  }
-  
-  .register-box input[type="text"],
-  .register-box input[type="email"],
-  .register-box input[type="password"],
-  .register-box input[type="username"] {
-    width: 100%;
-    padding: 12px 15px;
-    margin: 10px 0;
-    font-size: 1rem;
-    border: 2px solid #000;
-    border-radius: 8px;
-    outline: none;
-    transition: border-color 0.3s ease;
-  }
-  
-  .register-box input:focus {
-    border-color: #3e5151;
-  }
-  
-  .register-box button {
-    width: 100%;
-    padding: 12px;
-    background-color: #3e5151;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-family: 'Anton', sans-serif;
-    cursor: pointer;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .register-box button:hover {
-    background-color: #2e3e3e;
-  }
-  
-  .continue-text {
-    margin: 20px 0 10px;
-    font-size: 1rem;
-  }
-  
-  .social-icons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .social-icons img {
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-  
-  .social-icons img:hover {
-    transform: scale(1.1);
-  }
-  
-  .login-link {
-    font-size: 0.95rem;
-  }
-  
-  .login-link a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .login-link a:hover {
-    text-decoration: underline;
-  }
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  .message-box {
-    text-align: center;
-    margin-top: 20px;
- }
- 
- .message-box h4 {
-    color: red;
-    margin-bottom: 10px;
- }
- 
- .message-box a {
-    font-size: 1.2rem;
-    color: #007BFF;
-    text-decoration: none;
- }
- 
- .message-box a:hover {
-    text-decoration: underline;
- }
+body {
+  font-family: 'Georgia', serif; /* Main font for body */
+  background-image: url('bg.PNG');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Common Colors */
+:root {
+  --primary-color: #3498db; /* Main button color and links */
+  --primary-hover-color: #2980b9; /* Hover color for buttons and links */
+  --secondary-color: #3e5151; /* Secondary button color */
+  --secondary-hover-color: #2e3e3e; /* Secondary button hover */
+  --text-color: #34495e; /* General text color */
+  --background-color: rgba(255, 255, 255, 0.95); /* White background */
+  --error-color: red; /* Error text color */
+}
+
+/* White Box Styles */
+.white-box {
+  background-color: var(--background-color);
+  padding: 2rem;
+  width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.white-box h1 {
+  font-family: 'Anton', sans-serif; /* Heading font */
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 1px;
+  color: var(--text-color);
+}
+
+.white-box input[type="text"],
+.white-box input[type="email"],
+.white-box input[type="password"],
+.white-box input[type="username"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  font-size: 1rem;
+  border: 2px solid #000;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.white-box input:focus {
+  border-color: var(--secondary-color);
+}
+
+.white-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-family: 'Anton', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.white-box button:hover {
+  background-color: var(--secondary-hover-color);
+}
+
+/* Continue Text */
+.continue-text {
+  margin: 20px 0 10px;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+/* Social Icons */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.social-icons img {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.social-icons img:hover {
+  transform: scale(1.1);
+}
+
+/* Login Link */
+.login-link {
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.login-link a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* Message Box */
+.message-box {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.message-box h4 {
+  color: var(--error-color);
+  margin-bottom: 10px;
+}
+
+.message-box a {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.message-box a:hover {
+  text-decoration: underline;
+}
+
+/* Success Page Styles */
+.success-container {
+  background-color: var(--background-color);
+  padding: 2rem 3rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.success-container h1 {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+  font-family: 'Anton', sans-serif;
+}
+
+.success-container p {
+  margin-bottom: 2rem;
+  color: var(--text-color);
+  font-family: 'Georgia', serif;
+  font-size: 1.1rem;
+}
+
+.success-button {
+  text-decoration: none;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  font-weight: bold;
+  font-family: 'Georgia', sans-serif;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+}
+
+.success-button:hover {
+  background-color: var(--primary-hover-color);
+}
+
+.home-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #1f2937;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.sidebar nav a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.sidebar nav a i {
+  margin-right: 10px;
+}
+
+.sidebar nav a:hover {
+  color: #38bdf8;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.top-bar .metrics {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.card i {
+  font-size: 1.5rem;
+  color: #38bdf8;
+  margin-bottom: 10px;
+}
+
+/* Inventory Table */
+.inventory {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+}
+
+.inventory table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inventory th, .inventory td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.inventory th {
+  background-color: #f9fafb;
+}
+
+.in-stock {
+  color: green;
+  font-weight: bold;
+}
+
+.low-stock {
+  color: orange;
+  font-weight: bold;
+}
+
+.out-of-stock {
+  color: red;
+  font-weight: bold;
+}
+
+/* Right Column */
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-left: 20px;
+}
+
+.recent-activity, .low-stock-alerts {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.recent-activity h2, .low-stock-alerts h2 {
+  margin-bottom: 10px;
+}
+
+.low-stock-alerts ul {
+  list-style: none;
+  padding: 0;
+}
+
+.low-stock-alerts li {
+  padding: 5px 0;
+}

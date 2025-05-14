@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="container">
-    <form class="register-box" action="action_page.php" method='POST'>
+    <form class="white-box" action="action_page.php" method='POST'>
       <h1>REGISTER</h1>
       <input type="text" placeholder="Name" name="fname" required>
       <input type="text" placeholder="Username" name="uname" required>

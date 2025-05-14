@@ -1,36 +1,52 @@
 <?php
-    echo "<pre>";
-    var_dump($_POST);
-    echo "</pre>";
-    echo "<br><br>";
+// Display POST data for debugging (remove in production)
+echo "<pre>";
+var_dump($_POST);
+echo "</pre>";
+echo "<br><br>";
 
-    $fname = $_POST['fname'];
-    $uname = $_POST['uname'];
-    $pword = $_POST['pword'];
-?>
+// Get form data
+$fname = $_POST['fname'];
+$uname = $_POST['uname'];
+$pword = $_POST['pword'];
 
-<?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $database = "ims";
+// Database connection parameters
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "ims";
 
-    $conn = new mysqli($servername, $username, $password, $database);
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
 
-
-    if ($conn->connect_error) {
+// Check connection
+if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
-    }
-    echo "Connected successfully";
-?>
+}
 
-<?php
-    $sql = "INSERT INTO user (id, fname, uname, pword)
-    VALUES (NULL, '$fname', '$uname', '$pword')";
-    
-    if ($conn->query($sql) === TRUE) {
-      echo "New record created successfully";
-    } else {
-      echo "Error: " . $sql . "<br>" . $conn->error;
-    }
+// Prepare and bind
+$stmt = $conn->prepare("INSERT INTO user (fname, uname, pword) VALUES (?, ?, ?)");
+if ($stmt === false) {
+    die("Prepare failed: " . $conn->error);
+}
+
+// Hash the password
+$hashed_password = password_hash($pword, PASSWORD_DEFAULT);
+
+// Bind parameters
+$stmt->bind_param("sss", $fname, $uname, $hashed_password);
+
+// Execute the statement
+if ($stmt->execute()) {
+    echo "New record created successfully";
+    // Redirect to a success page or login page
+    header("Location: success.php");
+    exit();
+} else {
+    echo "Error: " . $stmt->error;
+}
+
+// Close the statement and connection
+$stmt->close();
+$conn->close();
 ?>
