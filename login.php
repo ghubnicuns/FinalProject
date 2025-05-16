@@ -2,6 +2,13 @@
 session_start();
 $msg = '';
 
+// ✅ Redirect to homepage if already logged in
+if (isset($_SESSION['user_id'])) {
+    header('Location: homepage.php'); // Replace with your actual homepage
+    exit();
+}
+
+// ✅ Show flash message if exists
 if (isset($_SESSION['msg'])) {
     $msg = $_SESSION['msg'];
     unset($_SESSION['msg']);

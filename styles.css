@@ -13,6 +13,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh; /* Ensure full height */
 }
 
 /* Common Colors */
@@ -30,7 +31,8 @@ body {
 .white-box {
   background-color: var(--background-color);
   padding: 2rem;
-  width: 400px;
+  width: 90%; /* Use percentage for responsiveness */
+  max-width: 400px; /* Limit max width */
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   text-align: center;
@@ -152,7 +154,8 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
   max-width: 400px;
-  width: 100%;
+  width: 90%; /* Responsive */
+  margin: 0 auto;
 }
 
 .success-container h1 {
@@ -175,7 +178,7 @@ body {
   padding: 0.75rem 1.5rem;
   border-radius: 5px;
   font-weight: bold;
-  font-family: 'Georgia', sans-serif;
+  font-family: 'Georgia', serif;
   transition: background-color 0.3s ease;
   display: inline-block;
 }
@@ -188,6 +191,7 @@ body {
   display: flex;
   min-height: 100vh;
   width: 100%;
+  flex-wrap: wrap; /* allows wrapping on smaller screens */
 }
 
 /* Sidebar */
@@ -196,6 +200,11 @@ body {
   background-color: #1f2937;
   color: white;
   padding: 20px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* This will push the logout button to the bottom */
+  height: 100vh; /* Make the sidebar full height */
 }
 
 .sidebar h2 {
@@ -221,23 +230,27 @@ body {
 
 /* Main Content */
 .main-content {
-  flex: 1;
+  flex: 1 1 0;
   padding: 20px;
+  min-width: 280px; /* Minimum width for small screens */
 }
 
+/* Top Bar Metrics */
 .top-bar .metrics {
   display: flex;
   gap: 20px;
   margin-bottom: 30px;
+  flex-wrap: wrap;
 }
 
 .card {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-  flex: 1;
+  flex: 1 1 150px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   text-align: center;
+  min-width: 150px;
 }
 
 .card i {
@@ -253,11 +266,13 @@ body {
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   margin-bottom: 30px;
+  overflow-x: auto;
 }
 
 .inventory table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 600px; /* For horizontal scroll on small screens */
 }
 
 .inventory th, .inventory td {
@@ -290,15 +305,21 @@ body {
   flex-direction: column;
   gap: 20px;
   margin-left: 20px;
+  flex: 1 1 300px;
+  min-width: 280px;
+  margin-top: 20px;
 }
 
+/* Recent Activity and Low Stock Alerts */
 .recent-activity, .low-stock-alerts {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  flex: 1;
 }
 
+/* Headings for alerts and activity */
 .recent-activity h2, .low-stock-alerts h2 {
   margin-bottom: 10px;
 }
@@ -311,3 +332,72 @@ body {
 .low-stock-alerts li {
   padding: 5px 0;
 }
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .main-content {
+    padding: 15px;
+  }
+
+  .right-column {
+    margin-left: 0;
+    margin-top: 20px;
+  }
+
+  .top-bar .metrics {
+    flex-direction: column;
+  }
+
+  .card {
+    min-width: 100%;
+  }
+
+  .inventory table {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .white-box {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .success-container {
+    width: 95%;
+    padding: 1.5rem;
+  }
+}
+.logout-container {
+  margin-top: auto; /* Pushes the logout button to the bottom */
+}
+.logout-button {
+  padding: 12px 15px;
+  background-color: #e74c3c; /* red color */
+  color: white;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: 'Anton', sans-serif;
+  text-decoration: none;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+.logout-button i {
+  margin-right: 8px;
+}
+.logout-button:hover {
+  background-color: #c0392b; /* darker red on hover */
+  text-decoration: none;
+}
+

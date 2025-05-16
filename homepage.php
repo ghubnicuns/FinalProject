@@ -1,24 +1,39 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    // Redirect to the login page if not logged in
+    header("Location: login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Project Storemai</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
   <div class="home-container">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <h2>PROJECT STOREMAI</h2>
-      <nav>
-        <a href="#"><i class="fas fa-home"></i> Dashboard</a>
-        <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
-        <a href="users.php"><i class="fas fa-users"></i> Users</a>
-        <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-        <a href="add.php"><i class="fas fa-tags"></i> Products</a>
-      </nav>
-    </aside>
+  <h2>PROJECT STOREMAI</h2>
+  <nav>
+    <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+    <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+    <a href="users.php"><i class="fas fa-users"></i> Users</a>
+    <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
+    <a href="add.php"><i class="fas fa-tags"></i> Products</a>
+  </nav>
+  <div class="logout-container">
+    <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</aside>
+
 
     <!-- Main Content -->
     <main class="main-content">
