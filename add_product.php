@@ -20,24 +20,26 @@ try {
     die("Could not connect to the database: " . $e->getMessage());
 }
 
-$product_name = $product_price = $pdescript = "";
+$product_name = $product_price = $product_quantity = $pdescript = "";
 $success_message = $error_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $product_name = trim($_POST['product_name'] ?? '');
     $product_price = trim($_POST['product_price'] ?? '');
+    $product_quantity = trim($_POST['product_quantity'] ?? '');
     $pdescript = trim($_POST['pdescript'] ?? '');
 
-    // Basic validation
-    if ($product_name == "" || $product_price == "" || !is_numeric($product_price)) {
-        $error_message = "Please fill all fields correctly. Price must be a number.";
+    if ($product_name === "" || $product_price === "" || $product_quantity === "" || !is_numeric($product_price) || !is_numeric($product_quantity)) {
+        $error_message = "Please fill all fields correctly. Price and quantity must be numbers.";
     } else {
-        // Insert into database
-        $stmt = $pdo->prepare("INSERT INTO products (product_name, product_price, pdescript) VALUES (?, ?, ?)");
-        if ($stmt->execute([$product_name, $product_price, $pdescript])) {
+        $stmt = $pdo->prepare("INSERT INTO products (product_name, product_price, product_quantity, pdescript) VALUES (?, ?, ?, ?)");
+        if ($stmt->execute([$product_name, $product_price, $product_quantity, $pdescript])) {
+            // Log to activity_log
+            $log = $pdo->prepare("INSERT INTO activity_log (activity) VALUES (?)");
+            $log->execute(["Added product: $product_name (Qty: $product_quantity)"]);
+
             $success_message = "Product added successfully!";
-            // Clear fields after success
-            $product_name = $product_price = $pdescript = "";
+            $product_name = $product_price = $product_quantity = $pdescript = "";
         } else {
             $error_message = "Failed to add product. Please try again.";
         }
@@ -63,7 +65,6 @@ try {
 </head>
 <body>
   <div class="home-container">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <h2>PROJECT STOREMAI</h2>
       <nav>
@@ -71,14 +72,13 @@ try {
         <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
         <a href="users.php"><i class="fas fa-users"></i> Users</a>
         <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-        <a href="#" class="active"><i class="fas fa-tags"></i>Products</a>
+        <a href="#" class="active"><i class="fas fa-tags"></i> Products</a>
       </nav>
       <div class="logout-container">
         <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
       </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
       <section class="content">
         <div class="white-box" style="max-width:500px; margin: auto 0 40px;">
@@ -93,40 +93,21 @@ try {
 
           <form method="POST" action="add_product.php" class="add-product-form">
             <label for="product_name">Product Name</label>
-            <input 
-              id="product_name"
-              type="text" 
-              name="product_name" 
-              placeholder="Product Name" 
-              value="<?php echo htmlspecialchars($product_name); ?>" 
-              required
-            />
+            <input type="text" name="product_name" id="product_name" required value="<?php echo htmlspecialchars($product_name); ?>" />
 
             <label for="product_price">Product Price</label>
-            <input 
-              id="product_price"
-              type="text" 
-              name="product_price" 
-              placeholder="Product Price" 
-              value="<?php echo htmlspecialchars($product_price); ?>" 
-              required
-            />
+            <input type="text" name="product_price" id="product_price" required value="<?php echo htmlspecialchars($product_price); ?>" />
+
+            <label for="product_quantity">Product Quantity</label>
+            <input type="text" name="product_quantity" id="product_quantity" required value="<?php echo htmlspecialchars($product_quantity); ?>" />
 
             <label for="pdescript">Product Description</label>
-            <input 
-              id="pdescript"
-              type="text" 
-              name="pdescript" 
-              placeholder="Product Description" 
-              value="<?php echo htmlspecialchars($pdescript); ?>" 
-              required
-            />
+            <input type="text" name="pdescript" id="pdescript" required value="<?php echo htmlspecialchars($pdescript); ?>" />
 
             <button type="submit">Add Product</button>
           </form>
         </div>
 
-        <!-- Product List -->
         <div class="product-table">
           <h2>Existing Products</h2>
           <?php if (!empty($products)): ?>
@@ -136,6 +117,7 @@ try {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Price (₱)</th>
+                <th>Quantity</th>
                 <th>Description</th>
               </tr>
             </thead>
@@ -145,6 +127,7 @@ try {
                   <td><?php echo htmlspecialchars($product['product_id']); ?></td>
                   <td><?php echo htmlspecialchars($product['product_name']); ?></td>
                   <td><?php echo number_format($product['product_price'], 2); ?></td>
+                  <td><?php echo htmlspecialchars($product['product_quantity']); ?></td>
                   <td><?php echo htmlspecialchars($product['pdescript']); ?></td>
                 </tr>
               <?php endforeach; ?>
