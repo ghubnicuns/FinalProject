@@ -102,7 +102,7 @@ $edit_id = $_GET['edit'] ?? null;
 
   <main class="main-content">
     <section class="content">
-      <div class="white-box">
+      <div class="inventory-box inventory-box">
         <h1>Inventory Management</h1>
 
         <?php if ($success_message): ?>
@@ -111,7 +111,7 @@ $edit_id = $_GET['edit'] ?? null;
           <p class="message error"><?php echo htmlspecialchars($error_message); ?></p>
         <?php endif; ?>
 
-        <table>
+        <table class="inventory-table">
           <thead>
             <tr>
               <th>ID</th>
@@ -127,7 +127,7 @@ $edit_id = $_GET['edit'] ?? null;
             <?php if ($edit_id == $product['product_id']): ?>
               <!-- Edit Row -->
               <tr>
-                <form method="POST" action="inventory.php">
+                <form method="POST" action="inventory.php" class="edit-form">
                   <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>" />
                   <td><?php echo $product['product_id']; ?></td>
                   <td><input type="text" name="product_name" value="<?php echo htmlspecialchars($product['product_name']); ?>" required /></td>
@@ -135,7 +135,7 @@ $edit_id = $_GET['edit'] ?? null;
                   <td><input type="text" name="product_quantity" value="<?php echo htmlspecialchars($product['product_quantity']); ?>" required /></td>
                   <td><input type="text" name="pdescript" value="<?php echo htmlspecialchars($product['pdescript']); ?>" required /></td>
                   <td>
-                    <button type="submit" name="update_product">Save</button>
+                    <button class="save-button" type="submit" name="update_product">Save</button>
                     <a href="inventory.php" class="cancel-button">Cancel</a>
                   </td>
                 </form>
