@@ -682,12 +682,11 @@ body {
 
 .edit-form input[type="text"] {
   width: 100%;
-  padding: 6px 10px;
+  padding: 6px 8px;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 14px;
-  background-color: #fdfdfd;
-  transition: border-color 0.3s ease;
+  box-sizing: border-box;
 }
 
 .edit-form input[type="text"]:focus {
@@ -695,18 +694,18 @@ body {
   outline: none;
 }
 
-.edit-form button.save-button {
+.edit-form .save-button {
   background-color: #28a745;
-  color: white;
-  padding: 6px 12px;
+  color: #fff;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 5px;
   font-weight: bold;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.edit-form button.save-button:hover {
+.edit-form .save-button:hover {
   background-color: #218838;
 }
 
@@ -716,11 +715,11 @@ body {
   text-decoration: none;
   font-weight: bold;
   padding: 6px 12px;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
 .edit-form .cancel-button:hover {
   background-color: #f8d7da;
-  color: #a71d2a;
+  color: #721c24;
 }

@@ -19,11 +19,12 @@ try {
     die("DB connection failed: " . $e->getMessage());
 }
 
+$success_message = $error_message = "";
+
 // Handle product deletion
 if (isset($_GET['delete'])) {
     $delete_id = (int)$_GET['delete'];
 
-    // Get product name for logging
     $stmt = $pdo->prepare("SELECT product_name FROM products WHERE product_id = ?");
     $stmt->execute([$delete_id]);
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -31,7 +32,6 @@ if (isset($_GET['delete'])) {
     if ($product) {
         $stmt = $pdo->prepare("DELETE FROM products WHERE product_id = ?");
         if ($stmt->execute([$delete_id])) {
-            // Log activity
             $log = $pdo->prepare("INSERT INTO activity_log (activity) VALUES (?)");
             $log->execute(["Deleted product: " . $product['product_name']]);
             $success_message = "Product deleted successfully.";
@@ -44,8 +44,6 @@ if (isset($_GET['delete'])) {
 }
 
 // Handle product update
-$success_message = $error_message = "";
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
     $id = (int)$_POST['product_id'];
     $name = trim($_POST['product_name']);
@@ -58,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
     } else {
         $stmt = $pdo->prepare("UPDATE products SET product_name = ?, product_price = ?, product_quantity = ?, pdescript = ? WHERE product_id = ?");
         if ($stmt->execute([$name, $price, $qty, $desc, $id])) {
-            // Log activity
             $log = $pdo->prepare("INSERT INTO activity_log (activity) VALUES (?)");
             $log->execute(["Updated product: $name"]);
             $success_message = "Product updated successfully.";
@@ -68,21 +65,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
     }
 }
 
-// Get all products
 $stmt = $pdo->query("SELECT * FROM products ORDER BY product_id DESC");
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Track edit state
 $edit_id = $_GET['edit'] ?? null;
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Inventory - Project Storemai</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 <div class="home-container">
@@ -102,7 +96,7 @@ $edit_id = $_GET['edit'] ?? null;
 
   <main class="main-content">
     <section class="content">
-      <div class="inventory-box inventory-box">
+      <div class="inventory-box">
         <h1>Inventory Management</h1>
 
         <?php if ($success_message): ?>
@@ -125,23 +119,21 @@ $edit_id = $_GET['edit'] ?? null;
           <tbody>
           <?php foreach ($products as $product): ?>
             <?php if ($edit_id == $product['product_id']): ?>
-              <!-- Edit Row -->
-              <tr>
-                <form method="POST" action="inventory.php" class="edit-form">
-                  <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>" />
+              <form method="POST" action="inventory.php" class="edit-form">
+                <tr>
                   <td><?php echo $product['product_id']; ?></td>
-                  <td><input type="text" name="product_name" value="<?php echo htmlspecialchars($product['product_name']); ?>" required /></td>
-                  <td><input type="text" name="product_price" value="<?php echo htmlspecialchars($product['product_price']); ?>" required /></td>
-                  <td><input type="text" name="product_quantity" value="<?php echo htmlspecialchars($product['product_quantity']); ?>" required /></td>
-                  <td><input type="text" name="pdescript" value="<?php echo htmlspecialchars($product['pdescript']); ?>" required /></td>
+                  <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
+                  <td><input type="text" name="product_name" value="<?php echo htmlspecialchars($product['product_name']); ?>" required></td>
+                  <td><input type="text" name="product_price" value="<?php echo htmlspecialchars($product['product_price']); ?>" required></td>
+                  <td><input type="text" name="product_quantity" value="<?php echo htmlspecialchars($product['product_quantity']); ?>" required></td>
+                  <td><input type="text" name="pdescript" value="<?php echo htmlspecialchars($product['pdescript']); ?>" required></td>
                   <td>
                     <button class="save-button" type="submit" name="update_product">Save</button>
                     <a href="inventory.php" class="cancel-button">Cancel</a>
                   </td>
-                </form>
-              </tr>
+                </tr>
+              </form>
             <?php else: ?>
-              <!-- Display Row -->
               <tr>
                 <td><?php echo $product['product_id']; ?></td>
                 <td><?php echo htmlspecialchars($product['product_name']); ?></td>
