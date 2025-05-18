@@ -27,7 +27,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
     <a href="users.php"><i class="fas fa-users"></i> Users</a>
     <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-    <a href="add.php"><i class="fas fa-tags"></i> Products</a>
+    <a href="add_product.php"><i class="fas fa-tags"></i> Products</a>
   </nav>
   <div class="logout-container">
     <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>

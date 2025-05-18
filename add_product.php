@@ -67,11 +67,11 @@ try {
     <aside class="sidebar">
       <h2>PROJECT STOREMAI</h2>
       <nav>
-        <a href="index.php"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="homepage.php"><i class="fas fa-home"></i> Dashboard</a>
         <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
         <a href="users.php"><i class="fas fa-users"></i> Users</a>
         <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-        <a href="add_product.php" class="active"><i class="fas fa-tags"></i> Add Product</a>
+        <a href="#" class="active"><i class="fas fa-tags"></i>Products</a>
       </nav>
       <div class="logout-container">
         <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
