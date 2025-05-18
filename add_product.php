@@ -135,7 +135,7 @@ try {
               <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Price ($)</th>
+                <th>Price (₱)</th>
                 <th>Description</th>
               </tr>
             </thead>
