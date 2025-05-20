@@ -124,11 +124,11 @@ try {
             <tbody>
               <?php foreach ($products as $product): ?>
                 <tr>
-                  <td><?php echo htmlspecialchars($product['product_id']); ?></td>
-                  <td><?php echo htmlspecialchars($product['product_name']); ?></td>
-                  <td><?php echo number_format($product['product_price'], 2); ?></td>
-                  <td><?php echo htmlspecialchars($product['product_quantity']); ?></td>
-                  <td><?php echo htmlspecialchars($product['pdescript']); ?></td>
+                  <td><?php echo htmlspecialchars($product['product_id'] ?? ''); ?></td>
+                  <td><?php echo htmlspecialchars($product['product_name'] ?? ''); ?></td>
+                  <td><?php echo number_format($product['product_price'] ?? 0, 2); ?></td>
+                  <td><?php echo htmlspecialchars($product['product_quantity'] ?? '0'); ?></td>
+                  <td><?php echo htmlspecialchars($product['pdescript'] ?? ''); ?></td>
                 </tr>
               <?php endforeach; ?>
             </tbody>

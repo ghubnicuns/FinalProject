@@ -1,11 +1,17 @@
 <?php
 session_start();
 
+// Uncomment during development to see errors
+// ini_set('display_errors', 1);
+// error_reporting(E_ALL);
+
+// Redirect if user not logged in
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
     exit();
 }
 
+// Database config
 $host = 'localhost';
 $dbname = 'ims';
 $user = 'root';
@@ -15,11 +21,18 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Fetch all products
     $stmt = $pdo->query("SELECT * FROM products ORDER BY product_id DESC");
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $activityStmt = $pdo->query("SELECT * FROM activity_log ORDER BY timestamp DESC LIMIT 5");
+    // Check if 'timestamp' column exists in activity_log table
+    $columns = $pdo->query("SHOW COLUMNS FROM activity_log")->fetchAll(PDO::FETCH_COLUMN);
+    $orderColumn = in_array('timestamp', $columns) ? 'timestamp' : $columns[0]; // fallback to first column
+
+    // Fetch recent activity
+    $activityStmt = $pdo->query("SELECT * FROM activity_log ORDER BY $orderColumn DESC LIMIT 5");
     $activities = $activityStmt->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (Exception $e) {
     die("Database error: " . $e->getMessage());
 }
@@ -59,7 +72,7 @@ try {
               <?php
               $total = 0;
               foreach ($products as $product) {
-                  $total += (int)$product['product_quantity'];
+                  $total += isset($product['product_quantity']) ? (int)$product['product_quantity'] : 0;
               }
               echo number_format($total);
               ?>
@@ -72,7 +85,7 @@ try {
               <?php
               $lowStock = 0;
               foreach ($products as $product) {
-                  if ((int)$product['product_quantity'] <= 50) {
+                  if (isset($product['product_quantity']) && (int)$product['product_quantity'] <= 50) {
                       $lowStock++;
                   }
               }
@@ -83,12 +96,12 @@ try {
           <div class="card">
             <i class="fas fa-user-tie"></i>
             <p>Total Suppliers</p>
-            <h3>15</h3>
+            <h3>15</h3> <!-- Hardcoded for now -->
           </div>
           <div class="card">
             <i class="fas fa-truck-fast"></i>
             <p>Orders This Month</p>
-            <h3>125</h3>
+            <h3>125</h3> <!-- Hardcoded for now -->
           </div>
         </div>
       </header>
@@ -107,16 +120,16 @@ try {
             </thead>
             <tbody>
               <?php foreach ($products as $product): ?>
+                <?php $qty = isset($product['product_quantity']) ? (int)$product['product_quantity'] : 0; ?>
                 <tr>
-                  <td><?php echo htmlspecialchars($product['product_name']); ?></td>
+                  <td><?php echo htmlspecialchars($product['product_name'] ?? 'N/A'); ?></td>
                   <td><?php echo 'SKU' . str_pad($product['product_id'], 4, '0', STR_PAD_LEFT); ?></td>
-                  <td><?php echo (int)$product['product_quantity']; ?></td>
+                  <td><?php echo $qty; ?></td>
                   <td class="<?php 
-                      $qty = (int)$product['product_quantity'];
-                      echo $qty == 0 ? 'out-of-stock' : ($qty <= 50 ? 'low-stock' : 'in-stock');
+                      echo $qty === 0 ? 'out-of-stock' : ($qty <= 50 ? 'low-stock' : 'in-stock');
                   ?>">
                     <?php 
-                      echo $qty == 0 ? 'OUT OF STOCK' : ($qty <= 50 ? 'LOW STOCK' : 'IN STOCK');
+                      echo $qty === 0 ? 'OUT OF STOCK' : ($qty <= 50 ? 'LOW STOCK' : 'IN STOCK');
                     ?>
                   </td>
                 </tr>
@@ -130,7 +143,13 @@ try {
             <h2>Recent Activity</h2>
             <?php if (!empty($activities)): ?>
               <?php foreach ($activities as $log): ?>
-                <p><?php echo htmlspecialchars($log['activity']); ?> – <?php echo date("F j, Y, g:i a", strtotime($log['timestamp'])); ?></p>
+                <p>
+                  <?php echo htmlspecialchars($log['activity'] ?? 'Unknown activity'); ?> – 
+                  <?php
+                  $timestamp = $log[$orderColumn] ?? null;
+                  echo $timestamp ? date("F j, Y, g:i a", strtotime($timestamp)) : 'Unknown time';
+                  ?>
+                </p>
               <?php endforeach; ?>
             <?php else: ?>
               <p>No recent activity.</p>
@@ -141,8 +160,11 @@ try {
             <h2>Low Stock Alerts</h2>
             <ul>
               <?php foreach ($products as $product): ?>
-                <?php if ((int)$product['product_quantity'] <= 50): ?>
-                  <li><?php echo htmlspecialchars($product['product_name']); ?> – <?php echo (int)$product['product_quantity']; ?></li>
+                <?php if ((int)($product['product_quantity'] ?? 0) <= 50): ?>
+                  <li>
+                    <?php echo htmlspecialchars($product['product_name'] ?? 'Unnamed Product'); ?> – 
+                    <?php echo (int)($product['product_quantity'] ?? 0); ?>
+                  </li>
                 <?php endif; ?>
               <?php endforeach; ?>
             </ul>
