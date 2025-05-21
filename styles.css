@@ -46,6 +46,10 @@ body {
   color: var(--text-color);
 }
 
+.add-product{
+  margin-bottom: 2rem;
+}
+
 .white-box input[type="text"],
 .white-box input[type="email"],
 .white-box input[type="password"],
@@ -81,6 +85,18 @@ body {
 
 .white-box button:hover {
   background-color: var(--secondary-hover-color);
+}
+
+.white-box-product {
+  background-color: var(--background-color);
+  padding: 2rem;
+  max-width: 400px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.white-box-product h2 {
+  padding-bottom: 2rem;
 }
 
 /* Continue Text */

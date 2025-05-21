@@ -47,15 +47,16 @@ if (isset($_GET['delete'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_product'])) {
     $id = (int)$_POST['product_id'];
     $name = trim($_POST['product_name']);
+    $category = trim($_POST['product_category']);
     $price = trim($_POST['product_price']);
     $qty = trim($_POST['product_quantity']);
     $desc = trim($_POST['pdescript']);
 
-    if ($name === '' || !is_numeric($price) || !is_numeric($qty)) {
+    if ($name === '' || $category === '' || !is_numeric($price) || !is_numeric($qty)) {
         $error_message = "Please fill all fields correctly.";
     } else {
-        $stmt = $pdo->prepare("UPDATE products SET product_name = ?, product_price = ?, product_quantity = ?, pdescript = ? WHERE product_id = ?");
-        if ($stmt->execute([$name, $price, $qty, $desc, $id])) {
+        $stmt = $pdo->prepare("UPDATE products SET product_name = ?, product_category = ?, product_price = ?, product_quantity = ?, pdescript = ? WHERE product_id = ?");
+        if ($stmt->execute([$name, $category, $price, $qty, $desc, $id])) {
             $log = $pdo->prepare("INSERT INTO activity_log (activity) VALUES (?)");
             $log->execute(["Updated product: $name"]);
             $success_message = "Product updated successfully.";
@@ -83,12 +84,14 @@ $edit_id = $_GET['edit'] ?? null;
   <aside class="sidebar">
     <h2>PROJECT STOREMAI</h2>
     <nav>
-      <a href="homepage.php"><i class="fas fa-home"></i> Dashboard</a>
-      <a href="#" class="active"><i class="fas fa-boxes-stacked"></i> Inventory</a>
-      <a href="users.php"><i class="fas fa-users"></i> Users</a>
-      <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-      <a href="add_product.php"><i class="fas fa-tags"></i> Products</a>
-    </nav>
+        <a href="homepage.php"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+          <a href="users.php"><i class="fas fa-users"></i> Users</a>
+          <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
+        <?php endif; ?>
+        <a href="products.php"><i class="fas fa-tags"></i> Products</a>
+      </nav>
     <div class="logout-container">
       <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
@@ -110,6 +113,7 @@ $edit_id = $_GET['edit'] ?? null;
             <tr>
               <th>ID</th>
               <th>Name</th>
+              <th>Category</th>
               <th>Price (₱)</th>
               <th>Qty</th>
               <th>Description</th>
@@ -124,6 +128,7 @@ $edit_id = $_GET['edit'] ?? null;
                   <td><?php echo $product['product_id']; ?></td>
                   <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                   <td><input type="text" name="product_name" value="<?php echo htmlspecialchars($product['product_name']); ?>" required></td>
+                  <td><input type="text" name="product_category" value="<?php echo htmlspecialchars($product['product_category']); ?>" required></td>
                   <td><input type="text" name="product_price" value="<?php echo htmlspecialchars($product['product_price']); ?>" required></td>
                   <td><input type="text" name="product_quantity" value="<?php echo htmlspecialchars($product['product_quantity']); ?>" required></td>
                   <td><input type="text" name="pdescript" value="<?php echo htmlspecialchars($product['pdescript']); ?>" required></td>
@@ -137,6 +142,7 @@ $edit_id = $_GET['edit'] ?? null;
               <tr>
                 <td><?php echo $product['product_id']; ?></td>
                 <td><?php echo htmlspecialchars($product['product_name']); ?></td>
+                <td><?php echo htmlspecialchars($product['product_category']); ?></td>
                 <td><?php echo number_format($product['product_price'], 2); ?></td>
                 <td><?php echo htmlspecialchars($product['product_quantity']); ?></td>
                 <td><?php echo htmlspecialchars($product['pdescript']); ?></td>

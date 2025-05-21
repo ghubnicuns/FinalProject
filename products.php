@@ -20,30 +20,31 @@ try {
     die("Could not connect to the database: " . $e->getMessage());
 }
 
-$product_name = $product_price = $product_quantity = $pdescript = "";
+$product_name = $product_category = $product_price = $product_quantity = $pdescript = "";
 $success_message = $error_message = "";
 
 // Handle POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $product_name = trim($_POST['product_name'] ?? '');
+    $product_category = trim($_POST['product_category'] ?? '');
     $product_price = trim($_POST['product_price'] ?? '');
     $product_quantity = trim($_POST['product_quantity'] ?? '');
     $pdescript = trim($_POST['pdescript'] ?? '');
 
     if (
-        $product_name === "" || $product_price === "" || $product_quantity === "" ||
+        $product_name === "" || $product_category === "" || $product_price === "" || $product_quantity === "" ||
         !is_numeric($product_price) || !is_numeric($product_quantity)
     ) {
         $error_message = "Please fill all fields correctly. Price and quantity must be numbers.";
     } else {
-        $stmt = $pdo->prepare("INSERT INTO products (product_name, product_price, product_quantity, pdescript) VALUES (?, ?, ?, ?)");
-        if ($stmt->execute([$product_name, $product_price, $product_quantity, $pdescript])) {
+        $stmt = $pdo->prepare("INSERT INTO products (product_name, product_category, product_price, product_quantity, pdescript) VALUES (?, ?, ?, ?, ?)");
+        if ($stmt->execute([$product_name, $product_category, $product_price, $product_quantity, $pdescript])) {
             // Log activity
             $log = $pdo->prepare("INSERT INTO activity_log (activity) VALUES (?)");
-            $log->execute(["Added product: $product_name (Qty: $product_quantity)"]);
+            $log->execute(["Added product: $product_name (Qty: $product_quantity, Category: $product_category)"]);
 
             // PRG pattern: redirect to avoid resubmission on refresh
-            header("Location: add_product.php?success=1");
+            header("Location: products.php?success=1");
             exit();
         } else {
             $error_message = "Failed to add product. Please try again.";
@@ -80,9 +81,11 @@ try {
       <nav>
         <a href="homepage.php"><i class="fas fa-home"></i> Dashboard</a>
         <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
-        <a href="users.php"><i class="fas fa-users"></i> Users</a>
-        <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-        <a href="#" class="active"><i class="fas fa-tags"></i> Products</a>
+        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+          <a href="users.php"><i class="fas fa-users"></i> Users</a>
+          <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
+        <?php endif; ?>
+        <a href="products.php"><i class="fas fa-tags"></i> Products</a>
       </nav>
       <div class="logout-container">
         <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -91,19 +94,20 @@ try {
 
     <main class="main-content">
       <section class="content">
-        <div class="white-box" style="max-width:500px; margin: auto 0 40px;">
-          <h1>Add New Product</h1>
-
+        <div class="white-box-product">
+          <h2>Add New Product</h2>
           <?php if ($success_message): ?>
             <p class="message"><?php echo htmlspecialchars($success_message); ?></p>
           <?php endif; ?>
           <?php if ($error_message): ?>
             <p class="message error"><?php echo htmlspecialchars($error_message); ?></p>
           <?php endif; ?>
-
-          <form method="POST" action="add_product.php" class="add-product-form">
+          <form method="POST" action="products.php" class="add-product-form">
             <label for="product_name">Product Name</label>
             <input type="text" name="product_name" id="product_name" required value="<?php echo htmlspecialchars($product_name); ?>" />
+
+            <label for="product_category">Product Category</label>
+            <input type="text" name="product_category" id="product_category" required value="<?php echo htmlspecialchars($product_category); ?>" />
 
             <label for="product_price">Product Price</label>
             <input type="text" name="product_price" id="product_price" required value="<?php echo htmlspecialchars($product_price); ?>" />
@@ -126,6 +130,7 @@ try {
               <tr>
                 <th>ID</th>
                 <th>Name</th>
+                <th>Category</th>
                 <th>Price (₱)</th>
                 <th>Quantity</th>
                 <th>Description</th>
@@ -136,6 +141,7 @@ try {
                 <tr>
                   <td><?php echo htmlspecialchars($product['product_id']); ?></td>
                   <td><?php echo htmlspecialchars($product['product_name']); ?></td>
+                  <td><?php echo htmlspecialchars($product['product_category']); ?></td>
                   <td><?php echo number_format($product['product_price'], 2); ?></td>
                   <td><?php echo htmlspecialchars($product['product_quantity']); ?></td>
                   <td><?php echo htmlspecialchars($product['pdescript']); ?></td>

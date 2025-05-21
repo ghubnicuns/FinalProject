@@ -7,6 +7,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     exit();
 }
 
+// Enforce admin-only access
+if ($_SESSION['user_role'] !== 'admin') {
+    echo "<p style='padding:20px; font-family:sans-serif;'>Access denied. Only admins can manage reports. Redirecting...</p>";
+    echo "<script>setTimeout(() => { window.location.href = 'homepage.php'; }, 3000);</script>";
+    exit();
+}
+
 // Database connection
 $host = 'localhost';
 $dbname = 'ims';
@@ -44,50 +51,52 @@ foreach ($chartData as $row) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Reports - Project Storemai</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<div class="home-container">
-    <aside class="sidebar">
-        <h2>PROJECT STOREMAI</h2>
-        <nav>
-            <a href="homepage.php"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
-            <a href="users.php"><i class="fas fa-users"></i> Users</a>
-            <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-            <a href="add_product.php"><i class="fas fa-tags"></i> Products</a>
-        </nav>
-        <div class="logout-container">
-            <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
-        </div>
-    </aside>
+    <div class="home-container">
+        <aside class="sidebar">
+            <h2>PROJECT STOREMAI</h2>
+            <nav>
+                <a href="homepage.php"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <a href="users.php"><i class="fas fa-users"></i> Users</a>
+                    <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
+                <?php endif; ?>
+                <a href="products.php"><i class="fas fa-tags"></i> Products</a>
+            </nav>
+            <div class="logout-container">
+                <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
 
-    <main class="main-content">
-        <section class="chart-container">
-            <h3>Product Inventory Overview</h3>
-            <canvas id="productChart"></canvas>
-        </section>
+        <main class="main-content">
+            <section class="chart-container">
+                <h3>Product Inventory Overview</h3>
+                <canvas id="productChart"></canvas>
+            </section>
 
-        <section class="chart-container">
-            <h3>Low Stock Products (≤ 20 Units)</h3>
-            <canvas id="lowStockChart"></canvas>
-        </section>
-    </main>
-</div>
+            <section class="chart-container">
+                <h3>Low Stock Products (≤ 20 Units)</h3>
+                <canvas id="lowStockChart"></canvas>
+            </section>
+        </main>
+    </div>
 
-<!-- Embed PHP data for use in JS -->
-<script>
-    const productNames = <?= json_encode($productNames) ?>;
-    const productQuantities = <?= json_encode($productQuantities) ?>;
-    const lowStockNames = <?= json_encode($lowStockNames) ?>;
-    const lowStockQuantities = <?= json_encode($lowStockQuantities) ?>;
-</script>
+    <!-- Embed PHP data for use in JS -->
+    <script>
+        const productNames = <?= json_encode($productNames) ?>;
+        const productQuantities = <?= json_encode($productQuantities) ?>;
+        const lowStockNames = <?= json_encode($lowStockNames) ?>;
+        const lowStockQuantities = <?= json_encode($lowStockQuantities) ?>;
+    </script>
 
-<!-- External JavaScript file -->
-<script src="charts.js"></script>
+    <!-- External JavaScript file -->
+    <script src="charts.js"></script>
 </body>
 </html>

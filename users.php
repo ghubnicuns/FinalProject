@@ -7,11 +7,12 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     exit();
 }
 
-// OPTIONAL: Enforce admin-only access (uncomment if needed)
-// if ($_SESSION['uname'] !== 'admin') {
-//     echo "Access denied. Only admin can manage users.";
-//     exit();
-// }
+// Enforce admin-only access
+if ($_SESSION['user_role'] !== 'admin') {
+    echo "<p style='padding:20px; font-family:sans-serif;'>Access denied. Only admins can manage users. Redirecting...</p>";
+    echo "<script>setTimeout(() => { window.location.href = 'homepage.php'; }, 3000);</script>";
+    exit();
+}
 
 // Database connection
 $conn = new mysqli("localhost", "root", "", "ims");
@@ -30,12 +31,8 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     exit();
 }
 
-// Fetch users and their latest login time
-$sql = "
-    SELECT u.id, u.fname, u.uname, 
-           (SELECT MAX(login_time) FROM user_logins ul WHERE ul.user_id = u.id) AS last_login 
-    FROM users u
-";
+// Fetch users and their last login time directly from users table
+$sql = "SELECT id, fname, uname, last_login FROM users";
 $result = $conn->query($sql);
 ?>
 
@@ -52,12 +49,14 @@ $result = $conn->query($sql);
     <aside class="sidebar">
         <h2>PROJECT STOREMAI</h2>
         <nav>
-            <a href="homepage.php"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
-            <a href="users.php" class="active"><i class="fas fa-users"></i> Users</a>
-            <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-            <a href="add_product.php"><i class="fas fa-tags"></i> Products</a>
-        </nav>
+                <a href="homepage.php"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <a href="users.php"><i class="fas fa-users"></i> Users</a>
+                    <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
+                <?php endif; ?>
+                <a href="products.php"><i class="fas fa-tags"></i> Products</a>
+            </nav>
         <div class="logout-container">
             <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>

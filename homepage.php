@@ -1,11 +1,13 @@
 <?php
 session_start();
 
+// Redirect if user not logged in
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: login.php");
     exit();
 }
 
+// Database config
 $host = 'localhost';
 $dbname = 'ims';
 $user = 'root';
@@ -15,11 +17,18 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Fetch all products
     $stmt = $pdo->query("SELECT * FROM products ORDER BY product_id DESC");
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $activityStmt = $pdo->query("SELECT * FROM activity_log ORDER BY timestamp DESC LIMIT 5");
+    // Check if 'timestamp' column exists in activity_log table
+    $columns = $pdo->query("SHOW COLUMNS FROM activity_log")->fetchAll(PDO::FETCH_COLUMN);
+    $orderColumn = in_array('timestamp', $columns) ? 'timestamp' : $columns[0]; // fallback to first column
+
+    // Fetch recent activity
+    $activityStmt = $pdo->query("SELECT * FROM activity_log ORDER BY $orderColumn DESC LIMIT 5");
     $activities = $activityStmt->fetchAll(PDO::FETCH_ASSOC);
+
 } catch (Exception $e) {
     die("Database error: " . $e->getMessage());
 }
@@ -40,9 +49,11 @@ try {
       <nav>
         <a href="#"><i class="fas fa-home"></i> Dashboard</a>
         <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
-        <a href="users.php"><i class="fas fa-users"></i> Users</a>
-        <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
-        <a href="add_product.php"><i class="fas fa-tags"></i> Products</a>
+        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+          <a href="users.php"><i class="fas fa-users"></i> Users</a>
+          <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
+        <?php endif; ?>
+        <a href="products.php"><i class="fas fa-tags"></i> Products</a>
       </nav>
       <div class="logout-container">
         <a href="logout.php" class="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -57,7 +68,10 @@ try {
             <p>Total Stock</p>
             <h3>
               <?php
-              $total = array_sum(array_column($products, 'product_quantity'));
+              $total = 0;
+              foreach ($products as $product) {
+                  $total += isset($product['product_quantity']) ? (int)$product['product_quantity'] : 0;
+              }
               echo number_format($total);
               ?>
             </h3>
@@ -69,7 +83,7 @@ try {
               <?php
               $lowStock = 0;
               foreach ($products as $product) {
-                  if ((int)$product['product_quantity'] <= 50) {
+                  if (isset($product['product_quantity']) && (int)$product['product_quantity'] <= 50) {
                       $lowStock++;
                   }
               }
@@ -80,12 +94,12 @@ try {
           <div class="card">
             <i class="fas fa-user-tie"></i>
             <p>Total Suppliers</p>
-            <h3>15</h3> <!-- Dynamic logic can be added later -->
+            <h3>15</h3> <!-- Hardcoded for now -->
           </div>
           <div class="card">
             <i class="fas fa-truck-fast"></i>
             <p>Orders This Month</p>
-            <h3>125</h3> <!-- Placeholder -->
+            <h3>125</h3> <!-- Hardcoded for now -->
           </div>
         </div>
       </header>
@@ -103,18 +117,19 @@ try {
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($products as $product): 
-                $name = htmlspecialchars($product['product_name']);
-                $sku = 'SKU' . str_pad((int)$product['product_id'], 4, '0', STR_PAD_LEFT);
-                $qty = (int)$product['product_quantity'];
-                $statusClass = $qty === 0 ? 'out-of-stock' : ($qty <= 50 ? 'low-stock' : 'in-stock');
-                $statusText = $qty === 0 ? 'OUT OF STOCK' : ($qty <= 50 ? 'LOW STOCK' : 'IN STOCK');
-              ?>
+              <?php foreach ($products as $product): ?>
+                <?php $qty = isset($product['product_quantity']) ? (int)$product['product_quantity'] : 0; ?>
                 <tr>
-                  <td><?= $name ?></td>
-                  <td><?= $sku ?></td>
-                  <td><?= $qty ?></td>
-                  <td class="<?= $statusClass ?>"><?= $statusText ?></td>
+                  <td><?php echo htmlspecialchars($product['product_name'] ?? 'N/A'); ?></td>
+                  <td><?php echo 'SKU' . str_pad($product['product_id'], 4, '0', STR_PAD_LEFT); ?></td>
+                  <td><?php echo $qty; ?></td>
+                  <td class="<?php 
+                      echo $qty === 0 ? 'out-of-stock' : ($qty <= 50 ? 'low-stock' : 'in-stock');
+                  ?>">
+                    <?php 
+                      echo $qty === 0 ? 'OUT OF STOCK' : ($qty <= 50 ? 'LOW STOCK' : 'IN STOCK');
+                    ?>
+                  </td>
                 </tr>
               <?php endforeach; ?>
             </tbody>
@@ -126,7 +141,13 @@ try {
             <h2>Recent Activity</h2>
             <?php if (!empty($activities)): ?>
               <?php foreach ($activities as $log): ?>
-                <p><?= htmlspecialchars($log['activity']) ?> – <?= date("F j, Y, g:i a", strtotime($log['timestamp'])) ?></p>
+                <p>
+                  <?php echo htmlspecialchars($log['activity'] ?? 'Unknown activity'); ?> – 
+                  <?php
+                  $timestamp = $log[$orderColumn] ?? null;
+                  echo $timestamp ? date("F j, Y, g:i a", strtotime($timestamp)) : 'Unknown time';
+                  ?>
+                </p>
               <?php endforeach; ?>
             <?php else: ?>
               <p>No recent activity.</p>
@@ -136,21 +157,14 @@ try {
           <div class="low-stock-alerts">
             <h2>Low Stock Alerts</h2>
             <ul>
-              <?php
-              $hasLowStock = false;
-              foreach ($products as $product):
-                $qty = (int)$product['product_quantity'];
-                if ($qty <= 50):
-                  $hasLowStock = true;
-              ?>
-                <li><?= htmlspecialchars($product['product_name']) ?> – <?= $qty ?></li>
-              <?php 
-                endif;
-              endforeach;
-
-              if (!$hasLowStock): ?>
-                <li>All products are sufficiently stocked.</li>
-              <?php endif; ?>
+              <?php foreach ($products as $product): ?>
+                <?php if ((int)($product['product_quantity'] ?? 0) <= 50): ?>
+                  <li>
+                    <?php echo htmlspecialchars($product['product_name'] ?? 'Unnamed Product'); ?> – 
+                    <?php echo (int)($product['product_quantity'] ?? 0); ?>
+                  </li>
+                <?php endif; ?>
+              <?php endforeach; ?>
             </ul>
           </div>
         </div>
