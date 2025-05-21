@@ -31,14 +31,6 @@ if (isset($_SESSION['msg'])) {
          <input type="text" placeholder="Username" name="uname" id="uname" required aria-label="Username">
          <input type="password" placeholder="Password" name="pword" id="pword" required aria-label="Password">
          <button type="submit" name="login">Login</button>
-
-         <p class="continue-text">Continue with:</p>
-         <div class="social-icons">
-            <img src="https://img.icons8.com/color/48/facebook.png" alt="Facebook">
-            <img src="https://img.icons8.com/color/48/gmail--v1.png" alt="Gmail">
-            <img src="https://img.icons8.com/fluency/48/instagram-new.png" alt="Instagram">
-            <img src="https://img.icons8.com/ios-filled/48/000000/more.png" alt="More">
-         </div>
          <p class="login-link">Don't have an account? <a href="register.php">Register</a></p>
       </form>
       <div class="message-box">

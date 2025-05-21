@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 function checkUserCredentials($uname, $pword, $conn) {
-    $stmt = $conn->prepare("SELECT id, fname, uname, pword, role FROM user WHERE uname = ?");
+    $stmt = $conn->prepare("SELECT id, fname, uname, pword, role FROM users WHERE uname = ?");
     if (!$stmt) return [false, "Database error: " . $conn->error];
 
     $stmt->bind_param("s", $uname);
