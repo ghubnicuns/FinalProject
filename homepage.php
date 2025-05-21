@@ -57,10 +57,7 @@ try {
             <p>Total Stock</p>
             <h3>
               <?php
-              $total = 0;
-              foreach ($products as $product) {
-                  $total += (int)$product['product_quantity'];
-              }
+              $total = array_sum(array_column($products, 'product_quantity'));
               echo number_format($total);
               ?>
             </h3>
@@ -83,12 +80,12 @@ try {
           <div class="card">
             <i class="fas fa-user-tie"></i>
             <p>Total Suppliers</p>
-            <h3>15</h3>
+            <h3>15</h3> <!-- Dynamic logic can be added later -->
           </div>
           <div class="card">
             <i class="fas fa-truck-fast"></i>
             <p>Orders This Month</p>
-            <h3>125</h3>
+            <h3>125</h3> <!-- Placeholder -->
           </div>
         </div>
       </header>
@@ -106,19 +103,18 @@ try {
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($products as $product): ?>
+              <?php foreach ($products as $product): 
+                $name = htmlspecialchars($product['product_name']);
+                $sku = 'SKU' . str_pad((int)$product['product_id'], 4, '0', STR_PAD_LEFT);
+                $qty = (int)$product['product_quantity'];
+                $statusClass = $qty === 0 ? 'out-of-stock' : ($qty <= 50 ? 'low-stock' : 'in-stock');
+                $statusText = $qty === 0 ? 'OUT OF STOCK' : ($qty <= 50 ? 'LOW STOCK' : 'IN STOCK');
+              ?>
                 <tr>
-                  <td><?php echo htmlspecialchars($product['product_name']); ?></td>
-                  <td><?php echo 'SKU' . str_pad($product['product_id'], 4, '0', STR_PAD_LEFT); ?></td>
-                  <td><?php echo (int)$product['product_quantity']; ?></td>
-                  <td class="<?php 
-                      $qty = (int)$product['product_quantity'];
-                      echo $qty == 0 ? 'out-of-stock' : ($qty <= 50 ? 'low-stock' : 'in-stock');
-                  ?>">
-                    <?php 
-                      echo $qty == 0 ? 'OUT OF STOCK' : ($qty <= 50 ? 'LOW STOCK' : 'IN STOCK');
-                    ?>
-                  </td>
+                  <td><?= $name ?></td>
+                  <td><?= $sku ?></td>
+                  <td><?= $qty ?></td>
+                  <td class="<?= $statusClass ?>"><?= $statusText ?></td>
                 </tr>
               <?php endforeach; ?>
             </tbody>
@@ -130,7 +126,7 @@ try {
             <h2>Recent Activity</h2>
             <?php if (!empty($activities)): ?>
               <?php foreach ($activities as $log): ?>
-                <p><?php echo htmlspecialchars($log['activity']); ?> – <?php echo date("F j, Y, g:i a", strtotime($log['timestamp'])); ?></p>
+                <p><?= htmlspecialchars($log['activity']) ?> – <?= date("F j, Y, g:i a", strtotime($log['timestamp'])) ?></p>
               <?php endforeach; ?>
             <?php else: ?>
               <p>No recent activity.</p>
@@ -140,11 +136,21 @@ try {
           <div class="low-stock-alerts">
             <h2>Low Stock Alerts</h2>
             <ul>
-              <?php foreach ($products as $product): ?>
-                <?php if ((int)$product['product_quantity'] <= 50): ?>
-                  <li><?php echo htmlspecialchars($product['product_name']); ?> – <?php echo (int)$product['product_quantity']; ?></li>
-                <?php endif; ?>
-              <?php endforeach; ?>
+              <?php
+              $hasLowStock = false;
+              foreach ($products as $product):
+                $qty = (int)$product['product_quantity'];
+                if ($qty <= 50):
+                  $hasLowStock = true;
+              ?>
+                <li><?= htmlspecialchars($product['product_name']) ?> – <?= $qty ?></li>
+              <?php 
+                endif;
+              endforeach;
+
+              if (!$hasLowStock): ?>
+                <li>All products are sufficiently stocked.</li>
+              <?php endif; ?>
             </ul>
           </div>
         </div>

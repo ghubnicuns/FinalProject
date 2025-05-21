@@ -1,9 +1,4 @@
 <?php
-// Display POST data for debugging (remove in production)
-echo "<pre>";
-var_dump($_POST);
-echo "</pre>";
-echo "<br><br>";
 
 // Get form data
 $fname = $_POST['fname'];

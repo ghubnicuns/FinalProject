@@ -23,27 +23,37 @@ try {
 $product_name = $product_price = $product_quantity = $pdescript = "";
 $success_message = $error_message = "";
 
+// Handle POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $product_name = trim($_POST['product_name'] ?? '');
     $product_price = trim($_POST['product_price'] ?? '');
     $product_quantity = trim($_POST['product_quantity'] ?? '');
     $pdescript = trim($_POST['pdescript'] ?? '');
 
-    if ($product_name === "" || $product_price === "" || $product_quantity === "" || !is_numeric($product_price) || !is_numeric($product_quantity)) {
+    if (
+        $product_name === "" || $product_price === "" || $product_quantity === "" ||
+        !is_numeric($product_price) || !is_numeric($product_quantity)
+    ) {
         $error_message = "Please fill all fields correctly. Price and quantity must be numbers.";
     } else {
         $stmt = $pdo->prepare("INSERT INTO products (product_name, product_price, product_quantity, pdescript) VALUES (?, ?, ?, ?)");
         if ($stmt->execute([$product_name, $product_price, $product_quantity, $pdescript])) {
-            // Log to activity_log
+            // Log activity
             $log = $pdo->prepare("INSERT INTO activity_log (activity) VALUES (?)");
             $log->execute(["Added product: $product_name (Qty: $product_quantity)"]);
 
-            $success_message = "Product added successfully!";
-            $product_name = $product_price = $product_quantity = $pdescript = "";
+            // PRG pattern: redirect to avoid resubmission on refresh
+            header("Location: add_product.php?success=1");
+            exit();
         } else {
             $error_message = "Failed to add product. Please try again.";
         }
     }
+}
+
+// Show success message if redirected
+if (isset($_GET['success']) && $_GET['success'] == 1) {
+    $success_message = "Product added successfully!";
 }
 
 // Fetch all products
