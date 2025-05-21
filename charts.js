@@ -1,3 +1,4 @@
+// Product Inventory Bar Chart
 const productChartCtx = document.getElementById('productChart').getContext('2d');
 new Chart(productChartCtx, {
     type: 'bar',
@@ -33,6 +34,7 @@ new Chart(productChartCtx, {
     }
 });
 
+// Low Stock Bar Chart
 const lowStockChartCtx = document.getElementById('lowStockChart').getContext('2d');
 new Chart(lowStockChartCtx, {
     type: 'bar',
@@ -62,6 +64,34 @@ new Chart(lowStockChartCtx, {
                 beginAtZero: true,
                 ticks: {
                     stepSize: 1
+                }
+            }
+        }
+    }
+});
+
+// Monthly Sales Line Chart
+const salesChartCtx = document.getElementById('salesChart').getContext('2d');
+new Chart(salesChartCtx, {
+    type: 'line',
+    data: {
+        labels: salesMonths,
+        datasets: [{
+            label: 'Total Sales (₱)',
+            data: salesTotals,
+            fill: true,
+            backgroundColor: 'rgba(75, 192, 192, 0.3)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            tension: 0.3,
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: value => '₱' + value
                 }
             }
         }

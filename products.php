@@ -23,8 +23,8 @@ try {
 $product_name = $product_category = $product_price = $product_quantity = $pdescript = "";
 $success_message = $error_message = "";
 
-// Handle POST request
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Handle Add Product
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_product'])) {
     $product_name = trim($_POST['product_name'] ?? '');
     $product_category = trim($_POST['product_category'] ?? '');
     $product_price = trim($_POST['product_price'] ?? '');
@@ -39,11 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $stmt = $pdo->prepare("INSERT INTO products (product_name, product_category, product_price, product_quantity, pdescript) VALUES (?, ?, ?, ?, ?)");
         if ($stmt->execute([$product_name, $product_category, $product_price, $product_quantity, $pdescript])) {
-            // Log activity
             $log = $pdo->prepare("INSERT INTO activity_log (activity) VALUES (?)");
             $log->execute(["Added product: $product_name (Qty: $product_quantity, Category: $product_category)"]);
 
-            // PRG pattern: redirect to avoid resubmission on refresh
             header("Location: products.php?success=1");
             exit();
         } else {
@@ -52,7 +50,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Show success message if redirected
+// Handle Sale
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['record_sale'])) {
+    $sale_product_id = $_POST['sale_product_id'] ?? '';
+    $quantity_sold = $_POST['quantity_sold'] ?? '';
+
+    if (!is_numeric($sale_product_id) || !is_numeric($quantity_sold) || $quantity_sold <= 0) {
+        $error_message = "Invalid sale data. Please enter valid numbers.";
+    } else {
+        $productStmt = $pdo->prepare("SELECT product_price, product_quantity, product_name FROM products WHERE product_id = ?");
+        $productStmt->execute([$sale_product_id]);
+        $product = $productStmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$product) {
+            $error_message = "Product not found.";
+        } elseif ($product['product_quantity'] < $quantity_sold) {
+            $error_message = "Not enough stock available.";
+        } else {
+            $total_price = $product['product_price'] * $quantity_sold;
+
+            $saleStmt = $pdo->prepare("INSERT INTO sales (sale_date, product_id, quantity_sold, total_price) VALUES (CURDATE(), ?, ?, ?)");
+            $saleLogged = $saleStmt->execute([$sale_product_id, $quantity_sold, $total_price]);
+
+            if ($saleLogged) {
+                $updateStmt = $pdo->prepare("UPDATE products SET product_quantity = product_quantity - ? WHERE product_id = ?");
+                $updateStmt->execute([$quantity_sold, $sale_product_id]);
+
+                $log = $pdo->prepare("INSERT INTO activity_log (activity) VALUES (?)");
+                $log->execute(["Sale recorded: $quantity_sold unit(s) of {$product['product_name']}"]);
+
+                $success_message = "Sale recorded successfully.";
+            } else {
+                $error_message = "Failed to record sale.";
+            }
+        }
+    }
+}
+
 if (isset($_GET['success']) && $_GET['success'] == 1) {
     $success_message = "Product added successfully!";
 }
@@ -103,6 +137,7 @@ try {
             <p class="message error"><?php echo htmlspecialchars($error_message); ?></p>
           <?php endif; ?>
           <form method="POST" action="products.php" class="add-product-form">
+            <input type="hidden" name="add_product" value="1" />
             <label for="product_name">Product Name</label>
             <input type="text" name="product_name" id="product_name" required value="<?php echo htmlspecialchars($product_name); ?>" />
 
@@ -152,6 +187,29 @@ try {
           <?php else: ?>
             <p>No products added yet.</p>
           <?php endif; ?>
+        </div>
+
+        <!-- Sales Recording Section -->
+        <div class="white-box-product">
+          <h2>Record a Sale</h2>
+          <form method="POST" action="products.php" class="add-product-form">
+            <input type="hidden" name="record_sale" value="1" />
+
+            <label for="sale_product_id">Select Product</label>
+            <select name="sale_product_id" id="sale_product_id" required>
+              <option value="">-- Select Product --</option>
+              <?php foreach ($products as $product): ?>
+                <option value="<?php echo $product['product_id']; ?>">
+                  <?php echo htmlspecialchars($product['product_name']); ?> (Stock: <?php echo $product['product_quantity']; ?>)
+                </option>
+              <?php endforeach; ?>
+            </select>
+
+            <label for="quantity_sold">Quantity Sold</label>
+            <input type="number" name="quantity_sold" id="quantity_sold" required min="1" />
+
+            <button type="submit">Record Sale</button>
+          </form>
         </div>
       </section>
     </main>

@@ -90,7 +90,6 @@ body {
 .white-box-product {
   background-color: var(--background-color);
   padding: 2rem;
-  max-width: 400px;
   border-radius: 12px;
   text-align: center;
 }
@@ -432,10 +431,11 @@ body {
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   max-width: 600px;
-  margin-bottom: 40px;
+  margin: 0 auto 40px; /* Center horizontally and add bottom margin */
   font-family: 'Georgia', serif;
   color: #34495e;
 }
+
 
 .add-product-form h2 {
   font-family: 'Anton', sans-serif;
