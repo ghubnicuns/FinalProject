@@ -106,8 +106,8 @@ $inventoryLogs = $inventoryHistoryStmt->fetchAll(PDO::FETCH_ASSOC);
             <h2>PROJECT STOREMAI</h2>
             <nav>
                 <a href="homepage.php"><i class="fas fa-home"></i> Dashboard</a>
-                <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
                 <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <a href="inventory.php"><i class="fas fa-boxes-stacked"></i> Inventory</a>
                     <a href="users.php"><i class="fas fa-users"></i> Users</a>
                     <a href="reports.php"><i class="fas fa-chart-line"></i> Reports</a>
                 <?php endif; ?>
@@ -119,6 +119,11 @@ $inventoryLogs = $inventoryHistoryStmt->fetchAll(PDO::FETCH_ASSOC);
         </aside>
 
         <main class="main-content">
+            <div class="print-button">
+             <button onclick="window.print()" class="pdf-button">
+                 <i class="fas fa-file-pdf"></i> Download PDF
+             </button>
+            </div>
             <section class="chart-container">
                 <h3>Product Inventory Overview</h3>
                 <canvas id="productChart"></canvas>

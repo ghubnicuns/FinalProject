@@ -436,7 +436,6 @@ body {
   color: #34495e;
 }
 
-
 .add-product-form h2 {
   font-family: 'Anton', sans-serif;
   font-weight: 600;
@@ -803,6 +802,7 @@ body {
   color: gray;
   font-style: italic;
 }
+
 .chart-container {
   width: 90%;
   max-width: 1000px;
@@ -811,4 +811,9 @@ body {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.print-button{
+  text-align: right; 
+  margin-bottom: 20px
 }
