@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: 'Georgia', serif; /* Main font for body */
+  font-family: 'Georgia', serif;
   background-image: url('bg.PNG');
   background-size: cover;
   background-repeat: no-repeat;
@@ -13,40 +13,38 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Ensure full height */
+  min-height: 100vh;
 }
 
-/* Common Colors */
 :root {
-  --primary-color: #3498db; /* Main button color and links */
-  --primary-hover-color: #2980b9; /* Hover color for buttons and links */
-  --secondary-color: #3e5151; /* Secondary button color */
-  --secondary-hover-color: #2e3e3e; /* Secondary button hover */
-  --text-color: #34495e; /* General text color */
-  --background-color: rgba(255, 255, 255, 0.95); /* White background */
-  --error-color: red; /* Error text color */
+  --primary-color: #3498db;
+  --primary-hover-color: #2980b9;
+  --secondary-color: #3e5151;
+  --secondary-hover-color: #2e3e3e;
+  --text-color: #34495e;
+  --background-color: rgba(255, 255, 255, 0.95);
+  --error-color: red;
 }
 
-/* White Box Styles */
 .white-box {
   background-color: var(--background-color);
   padding: 2rem;
-  width: 90%; /* Use percentage for responsiveness */
-  max-width: 400px; /* Limit max width */
+  width: 90%;
+  max-width: 400px;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 
 .white-box h1 {
-  font-family: 'Anton', sans-serif; /* Heading font */
+  font-family: 'Anton', sans-serif;
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
   letter-spacing: 1px;
   color: var(--text-color);
 }
 
-.add-product{
+.add-product {
   margin-bottom: 2rem;
 }
 
@@ -98,14 +96,12 @@ body {
   padding-bottom: 2rem;
 }
 
-/* Continue Text */
 .continue-text {
   margin: 20px 0 10px;
   font-size: 1rem;
   color: var(--text-color);
 }
 
-/* Social Icons */
 .social-icons {
   display: flex;
   justify-content: center;
@@ -125,7 +121,6 @@ body {
   transform: scale(1.1);
 }
 
-/* Login Link */
 .login-link {
   padding-top: 2rem;
   font-size: 0.95rem;
@@ -141,7 +136,6 @@ body {
   text-decoration: underline;
 }
 
-/* Message Box */
 .message-box {
   text-align: center;
   margin-top: 20px;
@@ -162,7 +156,6 @@ body {
   text-decoration: underline;
 }
 
-/* Success Page Styles */
 .success-container {
   background-color: var(--background-color);
   padding: 2rem 3rem;
@@ -170,7 +163,7 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
   max-width: 400px;
-  width: 90%; /* Responsive */
+  width: 90%;
   margin: 0 auto;
 }
 
@@ -207,10 +200,9 @@ body {
   display: flex;
   min-height: 100vh;
   width: 100%;
-  flex-wrap: wrap; /* allows wrapping on smaller screens */
+  flex-wrap: wrap;
 }
 
-/* Sidebar */
 .sidebar {
   width: 250px;
   background-color: #2c3e50;
@@ -223,7 +215,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  z-index: 1000; /* Ensures it stays on top */
+  z-index: 1000;
 }
 
 .sidebar h2 {
@@ -247,18 +239,16 @@ body {
   color: #38bdf8;
 }
 
-/* Main Content */
 .main-content {
-  margin-left: 250px; /* Matches the sidebar width */
+  margin-left: 250px;
   padding: 20px;
-  min-height: 100vh; /* Ensures full vertical height */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  width: calc(100% - 250px); /* Ensures it fills the remaining width */
+  width: calc(100% - 250px);
   box-sizing: border-box;
 }
 
-/* Top Bar Metrics */
 .top-bar .metrics {
   display: flex;
   gap: 20px;
@@ -282,7 +272,6 @@ body {
   margin-bottom: 10px;
 }
 
-/* Inventory Table */
 .inventory {
   background-color: white;
   padding: 20px;
@@ -295,7 +284,7 @@ body {
 .inventory table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px; /* For horizontal scroll on small screens */
+  min-width: 600px;
 }
 
 .inventory th, .inventory td {
@@ -333,7 +322,6 @@ body {
   margin-top: 20px;
 }
 
-/* Recent Activity and Low Stock Alerts */
 .recent-activity, .low-stock-alerts {
   background-color: white;
   padding: 20px;
@@ -342,7 +330,6 @@ body {
   flex: 1;
 }
 
-/* Headings for alerts and activity */
 .recent-activity h2, .low-stock-alerts h2 {
   margin-bottom: 10px;
 }
@@ -356,7 +343,6 @@ body {
   padding: 5px 0;
 }
 
-/* Responsive Media Queries */
 @media (max-width: 768px) {
   .home-container {
     flex-direction: column;
@@ -400,12 +386,14 @@ body {
     padding: 1.5rem;
   }
 }
+
 .logout-container {
-  margin-top: auto; /* Pushes the logout button to the bottom */
+  margin-top: auto;
 }
+
 .logout-button {
   padding: 12px 15px;
-  background-color: #e74c3c; /* red color */
+  background-color: #e74c3c; 
   color: white;
   text-align: center;
   border-radius: 8px;
@@ -416,22 +404,23 @@ body {
   transition: background-color 0.3s ease;
   cursor: pointer;
 }
+
 .logout-button i {
   margin-right: 8px;
 }
+
 .logout-button:hover {
-  background-color: #c0392b; /* darker red on hover */
+  background-color: #c0392b;
   text-decoration: none;
 }
 
-/* Add Product Form Styling */
 .add-product-form {
   background-color: white;
   padding: 20px 30px;
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   max-width: 600px;
-  margin: 0 auto 40px; /* Center horizontally and add bottom margin */
+  margin: 0 auto 40px; 
   font-family: 'Georgia', serif;
   color: #34495e;
 }
@@ -487,17 +476,17 @@ body {
   background-color: #2e3e3e;
 }
 
-/* Message text for feedback */
 .message {
   margin-bottom: 15px;
   font-weight: bold;
   font-family: 'Georgia', serif;
-  color: #27ae60; /* green for success */
+  color: #27ae60; 
 }
 
 .message.error {
-  color: #e74c3c; /* red for error */
+  color: #e74c3c; 
 }
+
 .product-table {
   background-color: #ffffff;
   border-radius: 12px;
@@ -550,10 +539,9 @@ body {
   background: #fff;
   box-shadow: 0 0 12px rgba(0,0,0,0.08);
   border-radius: 8px;
-  
-  width: 100%;         /* Make it full width of parent */
-  box-sizing: border-box; /* Include padding in width */
-  overflow-x: auto;    /* Scroll horizontally if table is wide */
+  width: 100%;         
+  box-sizing: border-box; 
+  overflow-x: auto;    
 }
 
 .inventory-title {
@@ -563,7 +551,6 @@ body {
   margin-bottom: 25px;
 }
 
-/* Messages */
 .success-message {
   background-color: #d4edda;
   color: #155724;
@@ -582,7 +569,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* Table */
 .inventory-table {
   width: 100%;
   border-collapse: collapse;
@@ -678,7 +664,6 @@ body {
   background-color: #7f8c8d;
 }
 
-/* Action Buttons on Display Row */
 .btn-edit,
 .btn-delete {
   font-weight: 600;
@@ -816,4 +801,70 @@ body {
 .print-button{
   text-align: right; 
   margin-bottom: 20px
+}
+
+.white-box-regis {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 0 auto 40px;
+}
+.white-box-regis label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+.white-box-regis input[type="text"],
+.white-box-regis input[type="password"],
+.white-box-regis select {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Georgia', serif;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+.white-box-regis input[type="text"]:focus,
+.white-box-regis input[type="password"]:focus,
+.white-box-regis select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.white-box-regis button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-family: 'Anton', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.back-button-g {
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-family: 'Georgia', serif;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  float: right
+}
+
+.back-button-g:hover {
+  background-color: #2980b9;
 }
